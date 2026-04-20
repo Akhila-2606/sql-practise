@@ -1,0 +1,142 @@
+
+
+SELECT first_name, last_name, province_name
+from patients p
+join province_names pn on pn.province_id=p.province_id
+
+select first_name, last_name, height
+from patients
+where height = (
+	select MAX(height)
+	from patients
+)
+ 
+select DISTINCT city as unique_cities
+from patients
+where province_id = 'NS';
+
+select first_name, last_name, birth_date
+from patients
+where height > 160 and weight > 70;
+
+select first_name, last_name,allergies
+from patients
+where allergies is not null and 
+city = 'Hamilton';
+
+****MEDIUM *****
+
+SELECT first_name
+FROM patients
+group by first_name
+having count(*)=1;
+
+SELECT patient_id, first_name
+FROM patients
+where first_name like 's%s' 
+and length(first_name)>= 6;
+
+SELECT p.patient_id, p.first_name, p.last_name
+FROM patients p
+join admissions a on a.patient_id=p.patient_id
+where diagnosis = 'Dementia';
+
+SELECT first_name
+FROM patients
+order by len(first_name), first_name;
+
+********CASE → filters inside aggregation**********
+
+SELECT count(case when gender = 'M' then 1 end) as male_count,
+count(case when gender = 'F' then 1 end) as female_count
+from patients
+
+OR
+
+select sum(gender='M') as male_count,
+sum(gender='F') as female_count
+from patients
+
+******SQL IN Operator**********
+The IN operator allows you to specify multiple values in a WHERE clause.
+
+SELECT first_name,last_name, allergies
+FROM patients
+WHERE allergies = 'Penicillin' OR allergies = 'Morphine'
+ORDER BY allergies ASC, first_name ASC, last_name ASC;
+
+
+select patient_id, diagnosis
+FROM admissions
+group by patient_id, diagnosis
+HAVING COUNT(*)>1;
+
+
+select city, count(*) as num_patients
+from patients
+group by city
+order by num_patients desc, city asc;
+
+**********UNION ALL**************
+UNION ALL is used to combine results from multiple SELECT queries
+👉 It keeps all rows, including duplicates
+
+select first_name, last_name, 'Patient' as role
+from patients
+union all
+select first_name, last_name, 'Doctor' as role
+from doctors
+
+select allergies, count(*) as total_diagnosis
+from patients
+where allergies is not null
+group by allergies
+order by total_diagnosis desc;
+
+ *****1970's decade*****
+select first_name, last_name, birth_date
+from patients
+where year(birth_date) between 1970 and 1979
+order by birth_date asc;
+
+*******EX: SMITH,jane*****
+select concat(upper(last_name), ',',lower(first_name)) as new_name_format
+from patients
+order by first_name desc;
+
+select province_id, sum(height) as sum_height
+from patients
+group by province_id
+having sum_height >= 7000;
+
+
+select max(weight)-min(weight)
+from patients
+where last_name='Maroni'
+
+
+SELECT patient_id, first_name
+FROM patients
+where first_name like 's%s' 
+and length(first_name)>= 6;
+
+select day(admission_date) as day_number,
+count(*) as number_of_admissions
+from admissions
+group by day_number
+order by number_of_admissions desc;
+
+select * 
+from admissions
+where patient_id=542
+order by admission_date desc
+limit 1;
+
+or 
+
+SELECT *
+FROM admissions
+GROUP BY patient_id
+HAVING
+  patient_id = 542
+  AND max(admission_date)
