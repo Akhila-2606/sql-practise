@@ -130,3 +130,33 @@ on a.attending_doctor_id=d.doctor_id
 group by a.attending_doctor_id;
 
 
+select province_name,count(*) as patient_count
+from province_names pn
+join patients p
+on p.province_id=pn.province_id
+group by pn.province_id
+order by patient_count desc;
+
+
+select concat(p.first_name,' ',p.last_name) as patient_name,a.diagnosis,
+	concat(d.first_name,' ',d.last_name) as doctor_name
+from patients p
+join admissions a
+on a.patient_id=p.patient_id
+join doctors d
+on d.doctor_id=a.attending_doctor_id;
+
+select first_name, last_name, count(*)as num_of_duplicates
+from patients
+group by first_name,last_name
+having num_of_duplicates>1;
+
+
+select concat(first_name,' ',last_name)as patient_name,
+round(height/30.48, 1)as 'height "Feet"',
+round(weight*2.205,0)as 'weight "Pounds"',birth_date,
+case 
+when gender = 'M' then 'Male'
+else 'Female'
+end as gender_type
+from patients
